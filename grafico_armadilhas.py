@@ -2,8 +2,8 @@ import pandas as pd
 import matplotlib.pyplot as plt
 
 # Configurações
-MES_REFERENCIA = 'Março'
-SEMANA_REFERENCIA = 13
+MES_REFERENCIA = 'Janeiro'
+SEMANA_REFERENCIA = 3
 
 
 # Carregar o arquivo CSV com delimitador ';'
