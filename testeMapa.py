@@ -2,8 +2,8 @@ import pandas as pd
 import folium
 
 # Configurações
-MES_REFERENCIA = 'Janeiro'
-SEMANA_REFERENCIA = 3
+MES_REFERENCIA = 'Março'
+SEMANA_REFERENCIA = 13
 
 # Carregar o arquivo CSV com delimitador ';'
 df = pd.read_csv(f'data/data_{MES_REFERENCIA}.csv', delimiter=';')
@@ -17,7 +17,7 @@ def get_color(ovos):
     if 0 <= ovos <= 50:
         return 'green'        # Baixo risco
     elif 51 <= ovos <= 100:
-        return 'lightgreen'   # Risco moderado
+        return 'lightred'   # Risco moderado
     elif 101 <= ovos <= 150:
         return 'orange'       # Risco alto
     elif 151 <= ovos <= 200:
