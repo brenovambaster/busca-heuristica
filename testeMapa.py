@@ -1,48 +1,48 @@
 import pandas as pd
 import folium
 
+# Configurações
+MES_REFERENCIA = 'Janeiro'
+SEMANA_REFERENCIA = 3
+
 # Carregar o arquivo CSV com delimitador ';'
-df = pd.read_csv('data/data.csv', delimiter=';')
+df = pd.read_csv(f'data/data_{MES_REFERENCIA}.csv', delimiter=';')
 
 # Substituir vírgulas por pontos nas colunas de Latitude e Longitude e converter para float
 df['Latitude'] = df['Latitude'].str.replace(',', '.').astype(float)
 df['Longitude'] = df['Longitude'].str.replace(',', '.').astype(float)
 
-# Criar o mapa centrado em um ponto inicial (coordenadas médias da área de interesse)
-mapa = folium.Map(location=[-16.725469, -43.8476385], zoom_start=10)
+# Determinar a cor com base na quantidade de ovos, usando as cores válidas de folium.Icon
+def get_color(ovos):
+    if 0 <= ovos <= 50:
+        return 'green'        # Baixo risco
+    elif 51 <= ovos <= 100:
+        return 'lightgreen'   # Risco moderado
+    elif 101 <= ovos <= 150:
+        return 'orange'       # Risco alto
+    elif 151 <= ovos <= 200:
+        return 'red'          # Risco muito alto
+    elif 201 <= ovos <= 250:
+        return 'purple'       # Emergência
+    elif 251 <= ovos <= 300:
+        return 'darkpurple'   # Emergência extrema
+    elif ovos > 300:
+        return 'black'        # Risco máximo
 
-# Adicionar marcadores para cada ponto de latitude e longitude, com cores baseadas na quantidade de ovos
-for idx, row in df.iterrows():
-    # Determinar a cor do marcador com base na quantidade de ovos
-    if 0 <= row['Ovos'] <= 5:
-        color = 'green'
-    elif 10 <= row['Ovos'] <= 40:
-        color = 'orange'
-    elif row['Ovos'] > 40:
-        color = 'red'
-    else:
-        color = 'blue'  # Cor padrão para valores fora dos intervalos definidos, caso necessário
+# Adicionar uma coluna 'Cor' no DataFrame com base na quantidade de ovos
+df['Cor'] = df['Ovos'].apply(get_color)
 
-    # Criar o conteúdo do popup
-    popup_content = f"""
-    <b>Cidade:</b> {row['Município']}<br>
-    <b>Resultado:</b> {row['Resultado']}<br>
-    <b>Ciclo:</b> {row['Ciclo']}<br>
-    <b>Ovos:</b> {row['Ovos']}
-    """
-    popup = folium.Popup(popup_content, max_width=300)  # Define a largura do popup
+# Inicializar o mapa com o estilo satélite
+mapa = folium.Map(location=[df['Latitude'].mean(), df['Longitude'].mean()], zoom_start=12)
 
-    # Adicionar o marcador ao mapa com o popup ajustado
-    folium.Marker(
-        location=[row['Latitude'], row['Longitude']],
-        popup=popup,
-        icon=folium.Icon(color=color)
-    ).add_to(mapa)
-    
-    # Interrompe o loop se o ciclo não for 'Janeiro' (se necessário para depuração)
-    if row['Ciclo'] != 'Janeiro':
-        break
+# Adicionar marcadores padrão no mapa
+for idx, row in df.iterrows():  
+    if row['Ciclo'] == MES_REFERENCIA and row['Semana'] == SEMANA_REFERENCIA:
+        folium.Marker(
+            location=[row['Latitude'], row['Longitude']],
+            icon=folium.Icon(color=row['Cor'], icon="info-sign"),
+            popup=folium.Popup(f"Ovos: {row['Ovos']}<br>Latitude: {row['Latitude']}<br>Longitude: {row['Longitude']}", max_width=250)
+        ).add_to(mapa)
 
-# Salvar o mapa em um arquivo HTML
-mapa.save("mapa_dengue.html")
-mapa
+# Salvar o mapa como um arquivo HTML
+mapa.save(f'output/mapa_armadilhas_{MES_REFERENCIA}_sem{SEMANA_REFERENCIA}.html')
