@@ -14,6 +14,7 @@
 - [Melhor solução do Programa já encontrada até então:](#melhor-solução-do-programa-já-encontrada-até-então)
 
 
+## VEJA [COMO EXECUTAR](ComoExecutar.md)
 # 1. Busca Local
 A busca local, conforme implementada, não explora todas as permutações dos vizinhos. A busca pelo melhor centroide é realizada visitando todos os vizinhos do centróide inicial, e, caso algum desses vizinhos melhore o custo, ele será escolhido. Para cada vizinho, a função de custo é calculada, buscando o menor valor possível.
 No entanto, enquanto os vizinhos do centróide do cluster 1 são visitados, os centróides iniciais dos demais clusters permanecem congelados. Isso significa que apenas um centróide é alterado por vez. Para cada centróide i, todos os seus vizinhos são explorados, e o melhor vizinho (aquele que minimiza a função objetivo) é escolhido. Depois de atualizar um centróide, o algoritmo passa para o próximo e repete o processo. Essa abordagem melhora a solução de forma sequencial, centróide por centróide, o que pode levar a um processo de otimização mais lento e suscetível a ficar preso em um mínimo local.
