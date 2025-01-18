@@ -2,6 +2,7 @@ import numpy as np
 import random
 import pandas as pd
 from itertools import product
+import random
 
 class KMeans:
     __slots__ = ['n_clusters', 'max_iter', 'tol', 'data', 'centroids', 'labels', 'cost_minimum']
@@ -111,7 +112,7 @@ def local_search(data, centroids, neighbors, mode="best"):
     # Calcula o custo inicial
     best_centroids = centroids
     best_cost = compute_total_distance(data, centroids)
-    
+
     if mode == "first":
         # Estratégia de primeira melhora
         for i, centroid_neighbors in enumerate(neighbors):
@@ -171,7 +172,7 @@ def local_search_with_history(data, initial_centroids, neighbors, mode="best"):
 
     itereacao=0
     while improved:
-        itereacao+=1
+        # itereacao+=1
         improved = False
         # Para cada centróide, compara com todos os seus vizinhos
         best_centroids = current_centroids.copy()
@@ -198,5 +199,5 @@ def local_search_with_history(data, initial_centroids, neighbors, mode="best"):
         if mode == "first" and improved:
             break
         
-    print(f'Iteração: {itereacao} - Custo: {current_cost}')
+    # print(f'Iteração: {itereacao} - Custo: {current_cost}')
     return current_centroids, current_cost, history

@@ -60,7 +60,7 @@ def tabu_search(data, initial_centroids, neighbors, max_iter=100, tabu_size=5):
                 best_cost = current_cost
 
             history.append(current_cost)
-            print(f"Iteração {iteration + 1}: Custo {current_cost}")
+            print(f"Iteracao {iteration + 1}: Custo {current_cost}")
         else:
             # Se não houver vizinhos válidos, interrompe
             print("Nenhum vizinho válido encontrado.")

@@ -18,35 +18,47 @@ def main():
     # Executar K-Means
     kmeans = execute_kmeans(reduced_data, n_clusters=3)
     print("Custo  total do K-Means:", kmeans.cost())
-    
+    print_underscore()
+
     # Gerar vizinhanças dos centróides
     neighbors = generate_neighbors(kmeans.centroids, delta=0.1, N_PASSOS=3)
 
     #----------------------------------------------------------
     # Realizar a Busca Local (primeira melhora)
-    first_centroids, first_distance = local_search(reduced_data, kmeans.centroids, neighbors, mode="first")
-    print("Primeiros centróides encontrados:", first_centroids)
+    neighbors_local= neighbors.copy()
+    random.shuffle(neighbors_local)
+    first_centroids, first_distance = local_search(reduced_data, kmeans.centroids, neighbors_local, mode="first")
+    print("Primeiros centroides encontrados:", first_centroids)
     print("Custo total da busca local primeira melhora:", first_distance)
+    print_underscore()
 
     # Realizar a busca local (melhor melhora)
-    best_centroids, best_distance = local_search(reduced_data, kmeans.centroids, neighbors, mode="best")
-    print("Melhores centróides encontrados:", best_centroids)
+
+    best_centroids, best_distance = local_search(reduced_data, kmeans.centroids, neighbors_local, mode="best")
+    print("Melhores centroides encontrados:", best_centroids)
     print("Custo total da busca local melhor melhora:", best_distance)
+    print_underscore()
 
     # ----------------------------------------------------------
     # Busca local simultânea com histórico
-    centroids_first, cost_first, history_first = local_search_with_history(reduced_data, kmeans.centroids, neighbors, mode="best")
+    neighbors_h1 = neighbors.copy()
+    random.shuffle(neighbors_h1)
+    centroids_first, cost_first, history_first = local_search_with_history(reduced_data, kmeans.centroids, neighbors_h1, mode="best")
     
     # Realizar busca local com histórico
-    centroids_best, cost_best, history_best = local_search_with_history(reduced_data, kmeans.centroids, neighbors, mode="first")
+    centroids_best, cost_best, history_best = local_search_with_history(reduced_data, kmeans.centroids, neighbors_h1, mode="first")
 
     # Visualizar resultados
     plot_results(reduced_data, kmeans, centroids_best, history_first, history_best)
 
     # Busca tabu
-    best_centroids_tabu, best_cost_tabu, history_tabu = tabu_search(reduced_data, kmeans.centroids, neighbors)
+    neighbors_tabu = neighbors.copy()
+    # random.shuffle(neighbors_tabu) ???? fazer isso ou não? 
+
+    best_centroids_tabu, best_cost_tabu, history_tabu = tabu_search(reduced_data, kmeans.centroids, neighbors_tabu, max_iter=150, tabu_size=6)
     print("Melhores centróides pela busca tabu:", best_centroids_tabu)
     print("Custo final da busca tabu:", best_cost_tabu)
+    print_underscore()
 
     # Plotar histórico da busca tabu
     plt.figure(figsize=(10, 6))
@@ -115,6 +127,9 @@ def plot_results(reduced_data, kmeans, centroids_best, history_first, history_be
     plt.legend()
     plt.grid(True)
     plt.show()
+
+def print_underscore():
+    print("----------------------------------------------------------")
 
 
 #----------------------------------------------------------
