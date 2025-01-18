@@ -1,8 +1,5 @@
 import numpy as np
-import random
 import pandas as pd
-from itertools import product
-import random
 
 class KMeans:
     __slots__ = ['n_clusters', 'max_iter', 'tol', 'data', 'centroids', 'labels', 'cost_minimum']
