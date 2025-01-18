@@ -3,8 +3,9 @@ import numpy as np
 import matplotlib.pyplot as plt
 from src.preprocessamento import preprocess_data
 from src.utils import generate_neighbors
-from src.algoritmos import KMeans, local_search, local_search_with_history
+from src.algoritmos import *
 from src.vizualizacao import plot_kmeans_results
+from src.tabu import *
 
 #----------------------------------------------------------
 # Função principal de execução
@@ -16,21 +17,51 @@ def main():
     
     # Executar K-Means
     kmeans = execute_kmeans(reduced_data, n_clusters=3)
+    print("Custo  total do K-Means:", kmeans.cost())
     
     # Gerar vizinhanças dos centróides
-    neighbors = generate_neighbors(kmeans.centroids, delta=0.1, N_PASSOS=1)
-    
+    neighbors = generate_neighbors(kmeans.centroids, delta=0.1, N_PASSOS=3)
+
+    #----------------------------------------------------------
+    # Realizar a Busca Local (primeira melhora)
+    first_centroids, first_distance = local_search(reduced_data, kmeans.centroids, neighbors, mode="first")
+    print("Primeiros centróides encontrados:", first_centroids)
+    print("Custo total da busca local primeira melhora:", first_distance)
+
     # Realizar a busca local (melhor melhora)
     best_centroids, best_distance = local_search(reduced_data, kmeans.centroids, neighbors, mode="best")
     print("Melhores centróides encontrados:", best_centroids)
-    print("Menor distância total:", best_distance)
+    print("Custo total da busca local melhor melhora:", best_distance)
+
+    # ----------------------------------------------------------
+    # Busca local simultânea com histórico
+    centroids_first, cost_first, history_first = local_search_with_history(reduced_data, kmeans.centroids, neighbors, mode="best")
     
     # Realizar busca local com histórico
-    centroids_first, cost_first, history_first = local_search_with_history(reduced_data, kmeans.centroids, neighbors, mode="first")
-    centroids_best, cost_best, history_best = local_search_with_history(reduced_data, kmeans.centroids, neighbors, mode="best")
+    centroids_best, cost_best, history_best = local_search_with_history(reduced_data, kmeans.centroids, neighbors, mode="first")
 
     # Visualizar resultados
     plot_results(reduced_data, kmeans, centroids_best, history_first, history_best)
+
+    # Busca tabu
+    best_centroids_tabu, best_cost_tabu, history_tabu = tabu_search(reduced_data, kmeans.centroids, neighbors)
+    print("Melhores centróides pela busca tabu:", best_centroids_tabu)
+    print("Custo final da busca tabu:", best_cost_tabu)
+
+    # Plotar histórico da busca tabu
+    plt.figure(figsize=(10, 6))
+    plt.plot(history_tabu, label="Busca Tabu", marker="o")
+    plt.xlabel("Iteração")
+    plt.ylabel("Custo")
+    plt.title("Histórico da Busca Tabu")
+    plt.legend()
+    plt.grid(True)
+    plt.show()
+
+
+
+
+
 
 
 #----------------------------------------------------------

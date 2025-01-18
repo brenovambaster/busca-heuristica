@@ -4,6 +4,8 @@ import pandas as pd
 from itertools import product
 
 class KMeans:
+    __slots__ = ['n_clusters', 'max_iter', 'tol', 'data', 'centroids', 'labels', 'cost_minimum']
+
     def __init__(self, n_clusters, max_iter=100, tol=1e-4):
         """
         Implementação personalizada do algoritmo K-Means.
@@ -58,7 +60,18 @@ class KMeans:
         """
         distances = np.linalg.norm(self.centroids - point, axis=1)
         return np.argmin(distances)
+    
+    def cost(self):
+        """
+        Calcula a soma das distâncias dos pontos aos seus centróides mais próximos.
 
+        Returns:
+            float: Soma total das distâncias. I.e, o custo total.
+        """
+        distances = np.linalg.norm(self.data[:, np.newaxis] - self.centroids, axis=2)
+        min_distances = np.min(distances, axis=1)
+        self.cost_minimum = np.sum(min_distances)
+        return np.sum(min_distances)
 
 
 # Função para calcular o custo total
@@ -126,7 +139,7 @@ def local_search(data, centroids, neighbors, mode="best"):
 
 
 
-def local_search_with_history(data, initial_centroids, neighbors, mode="first"):
+def local_search_with_history(data, initial_centroids, neighbors, mode="best"):
     """
     Realiza busca local para minimizar o custo, com histórico para análise.
 
@@ -156,36 +169,34 @@ def local_search_with_history(data, initial_centroids, neighbors, mode="first"):
 
     improved = True
 
+    itereacao=0
     while improved:
+        itereacao+=1
         improved = False
-        for i, centroid_neighbors in enumerate(neighbors):
-            best_neighbor = None
-            best_cost = current_cost
+        # Para cada centróide, compara com todos os seus vizinhos
+        best_centroids = current_centroids.copy()
+        best_cost = current_cost
 
+        for i, centroid_neighbors in enumerate(neighbors):
             for neighbor in centroid_neighbors:
                 candidate_centroids = current_centroids.copy()
                 candidate_centroids[i] = neighbor
                 candidate_cost = compute_total_distance(data, candidate_centroids)
 
-                if candidate_cost < current_cost:
-                    if mode == "first":
-                        current_centroids = candidate_centroids
-                        current_cost = candidate_cost
-                        history.append(current_cost)
-                        improved = True
-                        break
-                    elif mode == "best":
-                        if candidate_cost < best_cost:
-                            best_neighbor = neighbor
-                            best_cost = candidate_cost
+                if candidate_cost < best_cost:
+                    best_centroids = candidate_centroids
+                    best_cost = candidate_cost
+                    improved = True
 
-            if mode == "best" and best_neighbor is not None:
-                current_centroids[i] = best_neighbor
-                current_cost = best_cost
-                history.append(current_cost)
-                improved = True
+        # Atualiza os centróides se houver melhoria
+        if improved:
+            current_centroids = best_centroids
+            current_cost = best_cost
+            history.append(current_cost)
 
-            if improved and mode == "first":
-                break
-
+        # Se for o modo 'first', interrompe ao encontrar a primeira melhoria
+        if mode == "first" and improved:
+            break
+        
+    print(f'Iteração: {itereacao} - Custo: {current_cost}')
     return current_centroids, current_cost, history
