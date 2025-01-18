@@ -1,56 +1,62 @@
 import numpy as np
 from src.algoritmos import *
+from src.utils import generate_neighbors
+from itertools import product
+import numpy as np
 
-def tabu_search(data, initial_centroids, neighbors, max_iter=100, tabu_size=5):
+def tabu_search(data, initial_centroids, neighbors, max_iter=100, tabu_size=100):
     """
     Implementa a busca tabu para minimizar o custo.
 
     Args:
         data (np.ndarray): Dados de entrada no formato (n_samples, n_features).
         initial_centroids (np.ndarray): Centróides iniciais (n_clusters, n_features).
-        neighbors (list): Vizinhanças dos centróides.
+        neighbors (np.ndarray): Vizinhanças dos centróides (n_clusters, n_neighbors, n_features).
         max_iter (int): Número máximo de iterações.
-        tabu_size (int): Tamanho da lista tabu.
+        tabu_size (int): Tamanho máximo da lista tabu.
 
     Returns:
-        tuple: (melhores centróides, custo final, histórico de custos).
+        tuple:
+            - Melhor conjunto de centróides encontrado (np.ndarray).
+            - Menor custo total (float).
+            - Histórico de custos por iteração (list).
     """
-    # Configurações iniciais
+    # Inicializações
     current_centroids = initial_centroids.copy()
-    current_cost = compute_total_distance(data, current_centroids)
-    best_centroids = current_centroids
-    best_cost = current_cost
-    tabu_list = []  # Lista tabu para registrar as soluções recentes
-    history = [current_cost]  # Histórico de custos
+    best_centroids = current_centroids.copy()
+    best_cost = compute_total_distance(data, current_centroids)
+    current_cost = best_cost
+    tabu_list = []  # Lista tabu para registrar os centróides recentes
+    history = [best_cost]  # Histórico de custos
 
     for iteration in range(max_iter):
-        neighborhood_costs = []
-        neighborhood_candidates = []
+        # Gerar todas as combinações de vizinhos
+        neighbor_combinations = product(*[neighbors[i] for i in range(neighbors.shape[0])])
+        neighbor_combinations = list(neighbor_combinations)  # Converta para lista para múltiplas iterações
 
-        # Gerar e avaliar vizinhos
-        for i, centroid_neighbors in enumerate(neighbors):
-            for neighbor in centroid_neighbors:
-                candidate_centroids = current_centroids.copy()
-                candidate_centroids[i] = neighbor
-                candidate_cost = compute_total_distance(data, candidate_centroids)
+        # Inicializações para a iteração atual
+        best_candidate = None
+        best_candidate_cost = float('inf')
 
-                # Checa se está na lista tabu ou é melhor que o custo global
-                if not is_tabu(candidate_centroids, tabu_list) or candidate_cost < best_cost:
-                    neighborhood_candidates.append(candidate_centroids)
-                    neighborhood_costs.append(candidate_cost)
+        # Avaliar todas as combinações de vizinhos
+        for combination in neighbor_combinations:
+            candidate_centroids = np.array(combination)
+            candidate_cost = compute_total_distance(data, candidate_centroids)
 
-        # Selecionar o melhor candidato
-        if neighborhood_costs:
-            best_index = np.argmin(neighborhood_costs)
-            best_candidate = neighborhood_candidates[best_index]
-            best_candidate_cost = neighborhood_costs[best_index]
+            # Ignorar combinações na lista tabu, a menos que atendam ao critério de aspiração
+            if candidate_cost < best_cost or candidate_centroids.tolist() not in tabu_list:
+                # Atualizar o melhor candidato da iteração atual
+                if candidate_cost < best_candidate_cost:
+                    best_candidate = candidate_centroids
+                    best_candidate_cost = candidate_cost
 
-            # Atualizar solução atual
+        # Atualizar solução atual
+        if best_candidate is not None:
             current_centroids = best_candidate
             current_cost = best_candidate_cost
 
             # Atualizar lista tabu
-            tabu_list.append(best_candidate)
+            tabu_list.append(current_centroids.tolist())
             if len(tabu_list) > tabu_size:
                 tabu_list.pop(0)
 
@@ -59,28 +65,10 @@ def tabu_search(data, initial_centroids, neighbors, max_iter=100, tabu_size=5):
                 best_centroids = current_centroids
                 best_cost = current_cost
 
-            history.append(current_cost)
-            print(f"Iteracao {iteration + 1}: Custo {current_cost}")
-        else:
-            # Se não houver vizinhos válidos, interrompe
-            print("Nenhum vizinho válido encontrado.")
-            break
+        # Atualizar histórico
+        history.append(current_cost)
+
+        # Gerar nova vizinhança para os centróides atuais
+        neighbors = generate_neighbors(current_centroids, delta=0.1, N_PASSOS=1)
 
     return best_centroids, best_cost, history
-
-
-def is_tabu(candidate, tabu_list):
-    """
-    Verifica se um conjunto de centróides está na lista tabu.
-
-    Args:
-        candidate (np.ndarray): Solução candidata.
-        tabu_list (list): Lista tabu com soluções recentes.
-
-    Returns:
-        bool: True se a solução estiver na lista tabu, False caso contrário.
-    """
-    for tabu in tabu_list:
-        if np.allclose(candidate, tabu):
-            return True
-    return False
