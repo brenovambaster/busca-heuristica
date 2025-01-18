@@ -8,6 +8,8 @@ from src.vizualizacao import plot_kmeans_results
 from src.tabu import *
 from tabulate import tabulate
 
+NUM_PASSOS = 2
+
 #----------------------------------------------------------
 # Função principal de execução
 def main():
@@ -17,6 +19,7 @@ def main():
     """
     # Resultados armazenados para a tabela
     resultados = []
+   
 
     # Carregar e preparar os dados
     data = load_data("data/wine.data")
@@ -31,7 +34,7 @@ def main():
     print_separator()
 
     # Gerar vizinhanças dos centróides
-    neighbors = generate_neighbors(kmeans.centroids, delta=0.1, N_PASSOS=1)
+    neighbors = generate_neighbors(kmeans.centroids, delta=0.1, N_PASSOS=NUM_PASSOS)
 
     print("Vizinhanças geradas:")
     print(neighbors)
@@ -61,17 +64,25 @@ def main():
     # Busca tabu
     neighbors_tabu = neighbors.copy()
     best_centroids_tabu, best_cost_tabu, history_tabu = tabu_search( reduced_data, kmeans.centroids, neighbors_tabu, max_iter=150, tabu_size=150 )
+    
     resultados.append(["Busca Tabu", best_centroids_tabu.tolist(), best_cost_tabu, history_tabu])
     print("Melhores centróides pela busca tabu:", best_centroids_tabu)
     print("Custo final da busca tabu:", best_cost_tabu)
     print_separator()
 
     # Plotar históricos de custo de todos os métodos
+    # Obter os valores mínimos
+    min_first = min(history_first)
+    min_best = min(history_best)
+    # Criar as retas horizontais com base no tamanho do histórico da busca tabu
+    horizontal_first = [min_first] * len(history_tabu)
+    horizontal_best = [min_best] * len(history_tabu)
     plot_cost_histories({
-        "Busca Local (Primeira Melhora)": history_first,
-        "Busca Local (Melhor Melhora)": history_best,
+        "Busca Local (Primeira Melhora)": horizontal_first,
+        "Busca Local (Melhor Melhora)": horizontal_best,
         "Busca Tabu": history_tabu
     })
+
 
     # Exibir tabela de resultados
     print("\n## RESUMO DOS RESULTADOS ##\n")
@@ -106,7 +117,7 @@ def plot_results(reduced_data, kmeans, centroids_best, history_first, history_be
     plt.scatter(kmeans.centroids[:, 0], kmeans.centroids[:, 1], c='blue', marker='o', label='K-Means')
     plt.xlabel("Flavanoids")
     plt.ylabel("Total_Phenols")
-    plt.title("Comparação de Centróides: K-Means vs. Busca Local (Melhor Melhora)")
+    plt.title("Comparação de Centróides: K-Means vs. Busca Local (Melhor Melhora) ")
     plt.legend()
     plt.grid(True)
     plt.show()
@@ -116,23 +127,26 @@ def plot_results(reduced_data, kmeans, centroids_best, history_first, history_be
     plt.plot(history_best, label="Melhor Melhora", marker="s", linestyle="--", linewidth=0.8)
     plt.xlabel("Iteração")
     plt.ylabel("Custo")
-    plt.title("Histórico de Custos: Busca Local")
+    plt.title("Histórico de Custos: Busca Local com {} Passos".format(NUM_PASSOS))
     plt.legend()
     plt.grid(True)
     plt.show()
 
 #----------------------------------------------------------
-# Função para plotar os históricos de custo
+# Função de plotagem
 def plot_cost_histories(histories):
+    import matplotlib.pyplot as plt
+    
     plt.figure(figsize=(10, 6))
     for label, history in histories.items():
         plt.plot(history, label=label, marker="o")
     plt.xlabel("Iteração")
     plt.ylabel("Custo")
-    plt.title("Histórico de Custos de Todos os Métodos")
+    plt.title(f"Histórico de Custos de Todos os Métodos com {NUM_PASSOS} Passos")
     plt.legend()
     plt.grid(True)
     plt.show()
+
 
 #----------------------------------------------------------
 # Função para imprimir separador visual
@@ -142,7 +156,7 @@ def print_separator():
 #----------------------------------------------------------
 # Função para exibir a tabela de resultados
 def mostrar_tabela_resultados(resultados):
-    headers = ["Método", "Centróides Encontrados", "Custo Total", "Histórico de Custos"]
+    headers = ["Metodo", "Centroides Encontrados", "Custo Total", "Histórico de Custos"]
     resultados_formatados = [
         [metodo, centroides, custo, len(hist)] for metodo, centroides, custo, hist in resultados
     ]
