@@ -27,6 +27,7 @@ def main():
     # Realizar a Busca Local (primeira melhora)
     neighbors_local= neighbors.copy()
     random.shuffle(neighbors_local)
+    
     first_centroids, first_distance = local_search(reduced_data, kmeans.centroids, neighbors_local, mode="first")
     print("Primeiros centroides encontrados:", first_centroids)
     print("Custo total da busca local primeira melhora:", first_distance)
@@ -43,20 +44,24 @@ def main():
     # Busca local simultânea com histórico
     neighbors_h1 = neighbors.copy()
     random.shuffle(neighbors_h1)
-    centroids_first, cost_first, history_first = local_search_with_history(reduced_data, kmeans.centroids, neighbors_h1, mode="best")
     
-    # Realizar busca local com histórico
-    centroids_best, cost_best, history_best = local_search_with_history(reduced_data, kmeans.centroids, neighbors_h1, mode="first")
+    # neighbors_h2 = neighbors.copy()
+    # random.shuffle(neighbors_h2)
+
+    centroids_first, cost_first, history_first = local_search_with_history(reduced_data, kmeans.centroids, neighbors_h1, mode="first")
+    
+    centroids_best, cost_best, history_best = local_search_with_history(reduced_data, kmeans.centroids, neighbors_h1, mode="best")
 
     # Visualizar resultados
     plot_results(reduced_data, kmeans, centroids_best, history_first, history_best)
 
+    
     # Busca tabu
     neighbors_tabu = neighbors.copy()
     # random.shuffle(neighbors_tabu) ???? fazer isso ou não? 
 
-    best_centroids_tabu, best_cost_tabu, history_tabu = tabu_search(reduced_data, kmeans.centroids, neighbors_tabu, max_iter=150, tabu_size=6)
-    print("Melhores centróides pela busca tabu:", best_centroids_tabu)
+    best_centroids_tabu, best_cost_tabu, history_tabu = tabu_search(reduced_data, kmeans.centroids, neighbors_tabu, max_iter=150, tabu_size=8)
+    print("Melhores centroides pela busca tabu:", best_centroids_tabu)
     print("Custo final da busca tabu:", best_cost_tabu)
     print_underscore()
 
@@ -120,7 +125,7 @@ def plot_results(reduced_data, kmeans, centroids_best, history_first, history_be
     # Plotar comparação de desempenho
     plt.figure(figsize=(10, 6))
     plt.plot(history_first, label="Primeira Melhora", marker="o")
-    plt.plot(history_best, label="Melhor Melhora", marker="s")
+    plt.plot(history_best, label="Melhor Melhora", marker="s", linestyle="--", linewidth=0.8)
     plt.xlabel("Iteração")
     plt.ylabel("Custo")
     plt.title("Comparação de Desempenho: Primeira Melhora vs. Melhor Melhora")
