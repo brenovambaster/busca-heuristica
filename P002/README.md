@@ -1,12 +1,5 @@
 
 
-- [1. Busca Local](#1-busca-local)
-    - [1.1 Exemplo para ilustrar:](#11-exemplo-para-ilustrar)
-  - [1.2 Impacto na Busca Local](#12-impacto-na-busca-local)
-- [2. Busca Simultânea ? Implementar se der tempo ?](#2-busca-simultânea--implementar-se-der-tempo-)
-- [3. Busca Local e Busca Tabu](#3-busca-local-e-busca-tabu)
-  - [3.1 Busca Local](#31-busca-local)
-  - [3.2 Busca Tabu](#32-busca-tabu)
 - [4. Fatores que Influenciam no Desempenho](#4-fatores-que-influenciam-no-desempenho)
 - [5. Cenários Possíveis](#5-cenários-possíveis)
 - [6. Exemplo Numérico/Experimental](#6-exemplo-numéricoexperimental)
@@ -15,53 +8,15 @@
 
 
 ## VEJA [COMO EXECUTAR](ComoExecutar.md)
-# 1. Busca Local
-A busca local, conforme implementada, não explora todas as permutações dos vizinhos. A busca pelo melhor centroide é realizada visitando todos os vizinhos do centróide inicial, e, caso algum desses vizinhos melhore o custo, ele será escolhido. Para cada vizinho, a função de custo é calculada, buscando o menor valor possível.
-No entanto, enquanto os vizinhos do centróide do cluster 1 são visitados, os centróides iniciais dos demais clusters permanecem congelados. Isso significa que apenas um centróide é alterado por vez. Para cada centróide i, todos os seus vizinhos são explorados, e o melhor vizinho (aquele que minimiza a função objetivo) é escolhido. Depois de atualizar um centróide, o algoritmo passa para o próximo e repete o processo. Essa abordagem melhora a solução de forma sequencial, centróide por centróide, o que pode levar a um processo de otimização mais lento e suscetível a ficar preso em um mínimo local.
-??? Uma outra abordagem seria fazer a permutação (todas as combinações possíveis entre os vizinhos dos 3 centroides, o que levaria uma busca simultânea ou força bruta para analisar todos eles.  ) ????
-
-
-### 1.1 Exemplo para ilustrar:
-
-Cluster 1: O algoritmo encontra que, ao mover o centróide do cluster 1 para um vizinho, o custo total para o cluster 1 diminui. Isso significa que o centróide foi atualizado para uma melhor posição localmente.
-
-Cluster 2: Quando o algoritmo começa a explorar o cluster 2, ele encontra que movê-lo para um certo vizinho diminui o custo para o cluster 2. Contudo, essa mudança pode aumentar o custo para o cluster 1, pois os dois clusters podem ter centróides muito próximos. Essa proximidade pode alterar a relação entre os pontos e seus centróides nos dois clusters.
-
-
-## 1.2 Impacto na Busca Local
-
-Atualização Independente: Como o modelo atualiza os centróides independentemente, ele não tem controle global sobre o impacto das mudanças feitas em um cluster sobre os outros. Isso pode levar o modelo a ficar preso em soluções subótimas.
-
-Possibilidade de Mudanças Indesejadas: Uma alteração no centróide do cluster 2 pode aumentar o custo do cluster 1, embora reduza o custo do cluster 2. Essa interdependência entre os clusters não é levada em conta na busca local independente.
 
 
 
-# 2. Busca Simultânea ? Implementar se der tempo ?
 
-No modelo ajustado, todos os centróides são avaliados ao mesmo tempo. Para cada centróide, você explora todos os seus vizinhos, mas as mudanças só são aplicadas simultaneamente ao final de cada iteração, em vez de uma por vez.
-Se uma melhoria é encontrada em qualquer centróide, ela é aplicada a todos os centróides ao mesmo tempo. O processo continua até que não haja mais melhorias. Essa abordagem ajusta os centróides de forma mais global, permitindo escapar de mínimos locais. No entanto, é mais computacionalmente custosa, pois exige a avaliação de todas as combinações de vizinhos simultaneamente.
-
-2.1 Implicações da Busca Simultânea
-Melhor Desempenho Potencial: Avaliando todos os vizinhos ao mesmo tempo, a busca simultânea tem maior potencial de encontrar soluções melhores rapidamente, evitando ficar presa em mínimos locais.
-
-
-Maior Complexidade Computacional: A busca simultânea é mais cara do ponto de vista computacional, pois exige a avaliação de todos os vizinhos de todos os centróides antes de aplicar uma atualização global.
-
-
-Maior Risco de Sobrecarga: Quando há muitos centróides e vizinhos, o algoritmo pode enfrentar uma sobrecarga computacional significativa.
-
-
-Possibilidade de Melhor Resultado: Ao considerar as mudanças de forma global, a busca simultânea pode encontrar soluções melhores do que a busca local independente.
-
-
-
-# 3. Busca Local e Busca Tabu
-
-## 3.1 Busca Local
+##  Busca Local
 
 Avalia os vizinhos dos centróides para encontrar configurações melhores. Caso os vizinhos de um centróide atual ofereçam uma redução no custo, a busca local pode escapar de alguns mínimos locais encontrados pelo K-Means. Contudo, a busca local está limitada ao espaço de busca local e pode encontrar apenas um "mínimo local melhor".
 
-## 3.2 Busca Tabu
+##  Busca Tabu
 
 A busca tabu vai além da busca local ao introduzir uma memória, chamada lista tabu, que evita revisitar soluções exploradas recentemente. Isso permite ao algoritmo explorar mais amplamente o espaço de busca e escapar de mínimos locais.
 Critério de Aspiração: Permite ignorar a lista tabu se uma solução tabu oferecer um custo melhor que o melhor já encontrado, aumentando as chances de encontrar o ótimo global.

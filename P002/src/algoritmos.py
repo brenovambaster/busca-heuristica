@@ -1,5 +1,6 @@
 import numpy as np
 import pandas as pd
+from itertools import product
 
 class KMeans:
     __slots__ = ['n_clusters', 'max_iter', 'tol', 'data', 'centroids', 'labels', 'cost_minimum']
@@ -30,7 +31,10 @@ class KMeans:
         self.data = data
         n_samples, n_features = data.shape
         # Inicializa os centróides aleatoriamente
-        self.centroids = data[np.random.choice(n_samples, self.n_clusters, replace=False)]
+        # self.centroids = data[np.random.choice(n_samples, self.n_clusters, replace=False)]
+        self.centroids= np.array([[0.23242425, 0.16964401], 
+                                  [-1.00234577, -0.99855091], 
+                                  [1.11694924, 1.17118187]])
 
         for _ in range(self.max_iter):
             # Atribuir os pontos ao cluster mais próximo
@@ -89,112 +93,85 @@ def compute_total_distance(data, centroids):
     return np.sum(min_distances)
 
 
+from itertools import product
+import numpy as np
 
 def local_search(data, centroids, neighbors, mode="best"):
     """
     Realiza a busca local para encontrar uma configuração melhor de centróides.
 
     Args:
-        data (np.ndarray): Dados de entrada (n_samples, n_features).
+        data (np.ndarray): Dados de entrada no formato (n_samples, n_features).
         centroids (np.ndarray): Centróides iniciais (n_clusters, n_features).
-        neighbors (np.ndarray): Array contendo vizinhanças de cada centróide.
+        neighbors (np.ndarray): Array contendo vizinhanças de cada centróide
+                                no formato (n_centroids, n_neighbors, n_features).
         mode (str): 'first' para primeira melhora, 'best' para melhor melhora.
 
     Returns:
-        tuple: Melhor configuração de centróides e a menor soma de distâncias.
+        tuple: 
+            - Melhor configuração de centróides (np.ndarray).
+            - Menor soma de distâncias (float).
+            - Histórico de custos (list).
     """
     if mode not in ["first", "best"]:
         raise ValueError("Modo inválido. Use 'first' ou 'best'.")
     
-    # Calcula o custo inicial
-    best_centroids = centroids
+    if not isinstance(neighbors, np.ndarray) or neighbors.ndim != 3:
+        raise ValueError("O array de vizinhanças deve ter formato (n_centroids, n_neighbors, n_features).")
+    
+    # Configuração inicial
+    best_centroids = centroids.copy()
     best_cost = compute_total_distance(data, centroids)
+    history = [best_cost]  # Histórico de custos para análise posterior
 
     if mode == "first":
-        # Estratégia de primeira melhora
-        for i, centroid_neighbors in enumerate(neighbors):
-            for neighbor in centroid_neighbors:
-                new_centroids = centroids.copy()
-                new_centroids[i] = neighbor  # Substitui o centróide por seu vizinho
-                new_cost = compute_total_distance(data, new_centroids)
-                
-                if new_cost < best_cost:
-                    return new_centroids, new_cost  # Retorna na primeira melhora encontrada
-
+        return _local_search_first(data, best_centroids, neighbors, best_cost, history)
     elif mode == "best":
-        # Estratégia de melhor melhora
-        for i, centroid_neighbors in enumerate(neighbors):
-            for neighbor in centroid_neighbors:
-                new_centroids = centroids.copy()
-                new_centroids[i] = neighbor  # Substitui o centróide por seu vizinho
-                new_cost = compute_total_distance(data, new_centroids)
-                
-                if new_cost < best_cost:
-                    best_centroids = new_centroids
-                    best_cost = new_cost
+        return _local_search_best(data, best_centroids, neighbors, best_cost, history)
+
+
+def _local_search_first(data, centroids, neighbors, best_cost, history):
+    """
+    Realiza a busca local no modo 'first', retornando na primeira melhora encontrada.
+    """
+    best_centroids = centroids.copy()
+    neighbor_combinations = product(*[neighbors[i] for i in range(neighbors.shape[0])])
+
+    for combination in neighbor_combinations:
+        # Cada combinação representa uma configuração completa de centróides
+        candidate_centroids = np.array(combination)
+        candidate_cost = compute_total_distance(data, candidate_centroids)
+        # Atualizar o histórico para cada avaliação
+        history.append(candidate_cost)
+
+        # Atualizar o melhor custo e centróides, se necessário
+        if candidate_cost < best_cost:
+            best_centroids = candidate_centroids
+            best_cost = candidate_cost
+            return best_centroids, best_cost, history  # Retorna na primeira melhora encontrada
     
-    return best_centroids, best_cost
+    return candidate_cost, best_cost, history
+    
 
 
-
-def local_search_with_history(data, initial_centroids, neighbors, mode="best"):
+def _local_search_best(data, centroids, neighbors, best_cost, history):
     """
-    Realiza busca local para minimizar o custo, com histórico para análise.
-
-    Args:
-        data (np.ndarray): Dados (n_samples, n_features).
-        initial_centroids (np.ndarray): Centróides iniciais (n_clusters, n_features).
-        neighbors (list): Vizinhanças dos centróides.
-        mode (str): 'first' para a primeira melhora, 'best' para a melhor melhora.
-
-    Returns:
-        tuple: (melhores centróides, custo final, histórico de custos).
+    Realiza a busca local no modo 'best', avaliando todas as combinações de vizinhos.
     """
-    # Converter para arrays NumPy se necessário
-    if isinstance(data, pd.DataFrame):
-        data = data.values
-    if isinstance(initial_centroids, pd.DataFrame):
-        initial_centroids = initial_centroids.values
+    best_centroids = centroids.copy()
+    neighbor_combinations = product(*[neighbors[i] for i in range(neighbors.shape[0])])
 
-    # Garantir que os dados são 2D
-    data = np.atleast_2d(data)
-    initial_centroids = np.atleast_2d(initial_centroids)
+    for combination in neighbor_combinations:
+        # Cada combinação representa uma configuração completa de centróides
+        candidate_centroids = np.array(combination)
+        candidate_cost = compute_total_distance(data, candidate_centroids)
 
-    current_centroids = initial_centroids.copy()
- 
-    current_cost = compute_total_distance(data, current_centroids)
-    history = [current_cost]
+        # Atualizar o histórico para cada avaliação
+        history.append(candidate_cost)
 
-    improved = True
+        # Atualizar o melhor custo e centróides, se necessário
+        if candidate_cost < best_cost:
+            best_centroids = candidate_centroids
+            best_cost = candidate_cost
 
-    itereacao=0
-    while improved:
-        # itereacao+=1
-        improved = False
-        # Para cada centróide, compara com todos os seus vizinhos
-        best_centroids = current_centroids.copy()
-        best_cost = current_cost
-
-        for i, centroid_neighbors in enumerate(neighbors):
-            for neighbor in centroid_neighbors:
-                candidate_centroids = current_centroids.copy()
-                candidate_centroids[i] = neighbor
-                candidate_cost = compute_total_distance(data, candidate_centroids)
-
-                if candidate_cost < best_cost:
-                    best_centroids = candidate_centroids
-                    best_cost = candidate_cost
-                    improved = True
-
-        # Atualiza os centróides se houver melhoria
-        if improved:
-            current_centroids = best_centroids
-            current_cost = best_cost
-            history.append(current_cost)
-
-        # Se for o modo 'first', interrompe ao encontrar a primeira melhoria
-        if mode == "first" and improved:
-            break
-        
-    # print(f'Iteração: {itereacao} - Custo: {current_cost}')
-    return current_centroids, current_cost, history
+    return best_centroids, best_cost, history
