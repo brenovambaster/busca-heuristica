@@ -3,8 +3,7 @@ import pandas as pd
 from itertools import product
 
 class KMeans:
-    __slots__ = ['n_clusters', 'max_iter', 'tol', 'data', 'centroids', 'labels', 'cost_minimum']
-
+    __slots__ = ['n_clusters', 'max_iter','centroids', 'tol', 'data', 'labels', 'cost_minimum']
     def __init__(self, n_clusters, max_iter=100, tol=1e-4):
         """
         Implementação personalizada do algoritmo K-Means.
@@ -17,6 +16,10 @@ class KMeans:
         self.n_clusters = n_clusters
         self.max_iter = max_iter
         self.tol = tol
+        self.centroids = np.array([[0.23242425, 0.16964401], 
+                                  [-1.00234577, -0.99855091], 
+                                  [1.11694924, 1.17118187]])
+
 
     def fit(self, data):
         """
@@ -32,9 +35,7 @@ class KMeans:
         n_samples, n_features = data.shape
         # Inicializa os centróides aleatoriamente
         # self.centroids = data[np.random.choice(n_samples, self.n_clusters, replace=False)]
-        self.centroids= np.array([[0.23242425, 0.16964401], 
-                                  [-1.00234577, -0.99855091], 
-                                  [1.11694924, 1.17118187]])
+        
 
         for _ in range(self.max_iter):
             # Atribuir os pontos ao cluster mais próximo
@@ -74,6 +75,18 @@ class KMeans:
         min_distances = np.min(distances, axis=1)
         self.cost_minimum = np.sum(min_distances)
         return np.sum(min_distances)
+    
+    def avarange_cost(self):
+        """
+        Calcula a média das distâncias dos pontos aos seus centróides mais próximos.
+
+        Returns:
+            float: Média das distâncias.
+        """
+        distances = np.linalg.norm(self.data[:, np.newaxis] - self.centroids, axis=2)
+        min_distances = np.min(distances, axis=1)
+        return np.mean(min_distances)
+    
 
 
 # Função para calcular o custo total
