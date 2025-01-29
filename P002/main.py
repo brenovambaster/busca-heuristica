@@ -48,7 +48,7 @@ def main():
         neighbors_local, 
         mode="first"
     )
-    exit()
+
     resultados.append(["Busca Local (Primeira Melhora)", first_centroids.tolist(), first_distance, history_first])
     print("Primeiros centróides encontrados (Primeira Melhora):", first_centroids)
     print("Custo total da busca local (primeira melhora):", first_distance)
