@@ -82,7 +82,7 @@ def tabu_search(data, initial_centroids, neighbors, max_iter=100, tabu_size=100,
     return best_centroids, best_cost, history
 
 
-def _best_improvement_search(data, neighbors, current_centroids, global_best_cost, tabu_list):
+def _best_improvement_search(data, neighbors, global_best_cost, tabu_list):
     """
     Realiza a busca local “melhor melhora” (best improvement), avaliando todas
     as combinações de vizinhos, respeitando a lista tabu e aspiração.

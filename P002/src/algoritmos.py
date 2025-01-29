@@ -149,6 +149,7 @@ def local_search(data, centroids, neighbors, mode="best"):
 
     # Gera todas as combinações possíveis de vizinhança (cartesian product)
     neighbor_combinations = list(product(*[neighbors[i] for i in range(neighbors.shape[0])]))
+    print(neighbor_combinations)
     
     # Embaralha a lista de combinações para evitar viés de ordem
     random.shuffle(neighbor_combinations)

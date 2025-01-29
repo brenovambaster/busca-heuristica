@@ -1,5 +1,4 @@
 import pandas as pd
-import random
 import matplotlib.pyplot as plt
 
 from src.preprocessamento import preprocess_data
@@ -39,8 +38,8 @@ def main():
     # Gerar vizinhanças dos centróides
     neighbors = generate_neighbors(kmeans.centroids, delta=0.1, N_PASSOS=NUM_PASSOS)
     print("Vizinhanças geradas:")
-    print(neighbors)
-    
+    #print(neighbors)
+
     # Busca local (primeira melhora)
     neighbors_local = neighbors.copy()
     first_centroids, first_distance, history_first = local_search(
@@ -49,7 +48,7 @@ def main():
         neighbors_local, 
         mode="first"
     )
-
+    exit()
     resultados.append(["Busca Local (Primeira Melhora)", first_centroids.tolist(), first_distance, history_first])
     print("Primeiros centróides encontrados (Primeira Melhora):", first_centroids)
     print("Custo total da busca local (primeira melhora):", first_distance)
