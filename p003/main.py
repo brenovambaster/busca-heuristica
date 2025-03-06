@@ -17,16 +17,21 @@ def main():
     """ 
 
     __TOTAL_GERACAO__ :int = 200
+    __PROB_MUTACAO__ :float = 0.03
+    __PORCENTAGEM_ELITE__ :float = 0.2
+    __DMAX__ :float = 1.0
+    __TAMANHO_POPULACAO__ :int = 20
 
-    i =0
+  
     # Carregar e preparar os dados
     data = load_data("data/wine.data")
     features = ['Flavanoids', 'Total_Phenols']
     reduced_data, scaler = preprocess_data(data, features)
 
     # Criar a população inicial
-    populacao = Populacao(tamanho=20, dados=reduced_data)
+    populacao = Populacao(tamanho=__TAMANHO_POPULACAO__, dados=reduced_data)
     
+    i =0
     while i < __TOTAL_GERACAO__:
 
         # Exibir os indivíduos iniciais
@@ -41,10 +46,10 @@ def main():
         # exibir_individuos("Indivíduos após recombinação:", populacao.individuos)
 
         # Aplicar mutação
-        populacao.mutar_populacao(dmax=1.0, prob_mutacao=0.03)
+        populacao.mutar_populacao(dmax=__DMAX__, prob_mutacao=__PROB_MUTACAO__)
         # exibir_individuos("Indivíduos após mutação:", populacao.individuos)
 
-        populacao.substituir_populacao(porcentagem_elite=0.2)
+        populacao.substituir_populacao(porcentagem_elite=__PORCENTAGEM_ELITE__)
 
         # Salvar o melhor indivíduo no arquivo saida.out
         with open("saida.out", "a") as f:
