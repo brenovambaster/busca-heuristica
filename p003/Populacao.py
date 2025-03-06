@@ -1,3 +1,4 @@
+from re import S
 from tkinter.messagebox import RETRY
 import numpy as np
 from typing import List, Optional, Union
@@ -20,8 +21,6 @@ class Populacao:
         melhor_global (Optional[Individuo]): Melhor indivíduo encontrado até o momento.
     """
 
-    melhor_global: Optional[Individuo] = None
-
     def __init__(self, tamanho: int, dados: np.ndarray) -> None:
         """
         Inicializa a população com o número especificado de indivíduos.
@@ -30,10 +29,11 @@ class Populacao:
             tamanho: Número de indivíduos na população.
             dados: Base de dados a ser utilizada para o cálculo do fitness.
         """
+        
         self.tamanho = tamanho
         self.dados = dados
         self.individuos: List[Individuo] = self._inicializar_populacao()
-        self._melhor_individuo()
+        self.melhor_global = self.individuos[0]
 
     def _inicializar_populacao(self) -> List[Individuo]:
         """
@@ -99,7 +99,7 @@ class Populacao:
 
         return [Individuo(data=self.dados, individuo=solucao_busca_construtiva)]
 
-    def _melhor_individuo(self) -> Optional[Individuo]:
+    def _melhor_individuo_atual(self) -> Optional[Individuo]:
         """
         Identifica e armazena o melhor indivíduo da população atual.
         
@@ -109,13 +109,22 @@ class Populacao:
         Returns:
             O melhor indivíduo da população atual ou None se a população estiver vazia.
         """
-        if self.individuos is not None:
-            self.individuos.sort(key=lambda ind: ind.fitness)
-            self.melhor_global = self.individuos[0]
-            
-            return self.melhor_global
-        return None
+        
+        self.individuos.sort(key=lambda ind: ind.fitness)
 
+        return self.individuos[0]
+    
+    def _set_melhor_individuo_global(self) -> None:
+        """
+        Atualiza o melhor indivíduo global com base no melhor indivíduo atual.
+        """
+        melhor_atual = self._melhor_individuo_atual()
+        
+        if melhor_atual is not None:  # Certifica-se de que há um melhor indivíduo
+            if  melhor_atual.fitness < self.melhor_global.fitness:
+                self.melhor_global = melhor_atual  # Garante que o melhor global é sempre atualizado
+
+            
     def selecionar_individuos(self) -> List[Individuo]:
         """
         Seleciona indivíduos para recombinação.
@@ -128,7 +137,7 @@ class Populacao:
         """
         # Ordena os indivíduos atuais pela qualidade (fitness)
         # Assim, ao gerar os filhos, sempre vão pegar os melhores pais primeiro
-        self.individuos.sort(key=lambda ind: ind.fitness)
+        self._melhor_individuo_atual()
 
         return self.individuos
 
@@ -152,7 +161,7 @@ class Populacao:
             novos_individuos.extend([filho1, filho2])
     
         self.individuos.extend(novos_individuos)
-        self._melhor_individuo()
+        self._set_melhor_individuo_global()
 
         return self.individuos
 
@@ -170,39 +179,35 @@ class Populacao:
         for individuo in self.individuos:
             individuo.mutate(dmax, prob_mutacao)
 
-        self._melhor_individuo()
+        self._set_melhor_individuo_global()
 
-    def substituir_populacao(self, novos_individuos: List[Individuo], porcentagem_elite: float = 0.2) -> None:
+    def substituir_populacao(self, porcentagem_elite: float = 0.2) -> None:
         """
         Substitui a população atual por uma nova geração de indivíduos.
         
-        Implementa uma estratégia de substituição que combina:
-        1. Elitismo: preserva uma porcentagem dos melhores indivíduos
-        2. Seleção por roleta: seleciona o restante da população com probabilidade
-           proporcional ao fitness (inverso, pois menor fitness é melhor)
+        Preserva a elite e realiza seleção proporcional ao fitness para os demais.
         
         Args:
-            novos_individuos: Indivíduos gerados na recombinação.
-            porcentagem_elite: Proporção dos melhores indivíduos a serem preservados (default: 0.2).
+            porcentagem_elite: Proporção dos melhores indivíduos a serem preservados.
         """
-        # Ordena os indivíduos atuais pela qualidade (fitness)
         self.individuos.sort(key=lambda ind: ind.fitness)
         qtd_elite = int(self.tamanho * porcentagem_elite)
         elite = self.individuos[:qtd_elite]
-        
-        # Junta os indivíduos não-elite com os novos indivíduos
-        restantes = self.individuos[qtd_elite:] + novos_individuos
 
-        # Calcula os pesos para seleção via roleta: melhores indivíduos (fitness menor)
-        # têm peso maior (usamos a inversa do fitness, evitando divisão por zero)
+        # Mantém o melhor global manualmente
+        if self.melhor_global not in elite:
+            elite.append(self.melhor_global)
+
+        restantes = self.individuos[qtd_elite:]
         pesos = [(1.0 / ind.fitness if ind.fitness > 0 else 1.0) for ind in restantes]
-        
-        # Seleciona os indivíduos restantes com base nos pesos
-        qtd_restante = self.tamanho - qtd_elite
+
+        qtd_restante = self.tamanho - len(elite)
         selecionados = random.choices(restantes, weights=pesos, k=qtd_restante)
 
-        # Forma a nova população combinando os indivíduos elite com os selecionados
         self.individuos = elite + selecionados
+
+        # Atualiza o melhor global para garantir que ele não seja perdido
+        self._set_melhor_individuo_global()
 
     def proxima_geracao(self, dmax: float, prob_mutacao: float = 0.03, porcentagem_elite: float = 0.2) -> None:
         """
@@ -219,7 +224,7 @@ class Populacao:
             porcentagem_elite: Proporção dos melhores indivíduos a serem preservados (default: 0.2).
         """
         # Recombina os indivíduos para gerar filhos
-        filhos = self.recombinar()
+        self.recombinar()
         
         # NÃO NECESSARIAMENTE APLICA-SE PARA TODOS OS FILHOS
         # Aplica mutação a todos os filhos 
@@ -227,4 +232,4 @@ class Populacao:
         #     individuo.mutate(dmax, prob_mutacao)
             
         # Realiza a substituição para formar a nova geração
-        self.substituir_populacao(filhos, porcentagem_elite)
+        self.substituir_populacao(porcentagem_elite)

@@ -5,6 +5,7 @@ from Populacao import Populacao
 from processamento import preprocess_data
 
 
+
 def main():
     """
     Função principal para executar o pipeline completo do algoritmo genético.
@@ -13,8 +14,11 @@ def main():
     - Exibe os indivíduos gerados.
     - Seleciona, recombina e realiza mutação.
     - Identifica o melhor indivíduo.
-    """
-    
+    """ 
+
+    __TOTAL_GERACAO__ :int = 200
+
+    i =0
     # Carregar e preparar os dados
     data = load_data("data/wine.data")
     features = ['Flavanoids', 'Total_Phenols']
@@ -22,27 +26,36 @@ def main():
 
     # Criar a população inicial
     populacao = Populacao(tamanho=20, dados=reduced_data)
+    
+    while i < __TOTAL_GERACAO__:
 
-    # Exibir os indivíduos iniciais
-    exibir_individuos("Indivíduos gerados inicialmente:", populacao.individuos)
+        # Exibir os indivíduos iniciais
+        # exibir_individuos("Indivíduos gerados inicialmente:", populacao.individuos)
 
-    # Selecionar indivíduos para recombinação
-    populacao.selecionar_individuos()
-    exibir_individuos("Indivíduos selecionados para recombinação:", populacao.individuos)
+        # Selecionar indivíduos para recombinação
+        populacao.selecionar_individuos()
+        # exibir_individuos("Indivíduos selecionados para recombinação:", populacao.individuos)
 
-    # Realizar recombinação
-    filhos = populacao.recombinar()
-    exibir_individuos("Indivíduos após recombinação:", filhos)
+        # Realizar recombinação
+        populacao.recombinar()
+        # exibir_individuos("Indivíduos após recombinação:", populacao.individuos)
 
-    # Aplicar mutação
-    populacao.mutar_populacao(dmax=1.0, prob_mutacao=0.03)
-    exibir_individuos("Indivíduos após mutação:", populacao.individuos)
+        # Aplicar mutação
+        populacao.mutar_populacao(dmax=1.0, prob_mutacao=0.03)
+        # exibir_individuos("Indivíduos após mutação:", populacao.individuos)
 
-    # Exibir o melhor indivíduo
-    print_separator()
-    print("Melhor indivíduo da população:")
-    print(populacao.melhor_global.tolist() if populacao.melhor_global else "Nenhum indivíduo encontrado.")
-    print_separator()
+        populacao.substituir_populacao(porcentagem_elite=0.2)
+
+        # Salvar o melhor indivíduo no arquivo saida.out
+        with open("saida.out", "a") as f:
+            f.write("-" * 60 + "\n")
+            f.write("Melhor indivíduo da população:\n")
+            if populacao.melhor_global is not None:
+                f.write(str(populacao.melhor_global.tolist()) + "\n")
+            f.write("-" * 60 + "\n")
+
+        i += 1
+    
 
 
 def load_data(file_path: str) -> pd.DataFrame:

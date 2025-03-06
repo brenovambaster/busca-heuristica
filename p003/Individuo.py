@@ -48,7 +48,7 @@ class Individuo:
                       no formato [[x, y]].
         """
         self.individuo = individuo
-        self.fitness = self.calculate_fitness(self.data)
+        self.calculate_fitness(self.data)
 
     def calculate_fitness(self, data: np.ndarray) -> float:
         """
@@ -97,13 +97,8 @@ class Individuo:
         for centroide in self.individuo:
             if np.random.rand() < prob_mutacao:
                 # Adiciona um valor aleatório no intervalo [-dmax, dmax] para cada coordenada
-                print(f"Mutação a se aplicada em : {self.individuo}")
-                print(f"Fitness atual: {self.fitness}")
                 centroide += np.random.uniform(-dmax, dmax, size=2)
                 self.calculate_fitness(self.data)
-                print(f"Mutação após aplicada: {self.individuo}")
-                print(f"Fitness após mutação: {self.fitness}")
-
             
 
     def tolist(self) -> str:
