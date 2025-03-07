@@ -98,7 +98,8 @@ class Individuo:
             if np.random.rand() < prob_mutacao:
                 # Adiciona um valor aleatório no intervalo [-dmax, dmax] para cada coordenada
                 centroide += np.random.uniform(-dmax, dmax, size=2)
-                self.calculate_fitness(self.data)
+            
+            self.calculate_fitness(self.data)
             
 
     def tolist(self) -> str:

@@ -1,8 +1,9 @@
-import numpy as np
 import pandas as pd
-from Individuo import Individuo
 from Populacao import Populacao
 from processamento import preprocess_data
+from TrocaExtremidadesStrategy import TrocaExtremidadesStrategy
+from MediaStrategy import MediaStrategy
+
 
 
 
@@ -17,8 +18,8 @@ def main():
     """ 
 
     __TOTAL_GERACAO__ :int = 200
-    __PROB_MUTACAO__ :float = 0.03
-    __PORCENTAGEM_ELITE__ :float = 0.2
+    __PROB_MUTACAO__ :float = 0.05
+    __PORCENTAGEM_ELITE__ :float = 0.25
     __DMAX__ :float = 1.0
     __TAMANHO_POPULACAO__ :int = 20
 
@@ -31,32 +32,27 @@ def main():
     # Criar a população inicial
     populacao = Populacao(tamanho=__TAMANHO_POPULACAO__, dados=reduced_data)
     
+    # Estrarégias para gerar filhos
+    troca_extremidades_strategy = TrocaExtremidadesStrategy(data=reduced_data)
+    media_strategy = MediaStrategy(data=reduced_data)
+
     i =0
     while i < __TOTAL_GERACAO__:
 
-        # Exibir os indivíduos iniciais
-        # exibir_individuos("Indivíduos gerados inicialmente:", populacao.individuos)
 
-        # Selecionar indivíduos para recombinação
         populacao.selecionar_individuos()
-        # exibir_individuos("Indivíduos selecionados para recombinação:", populacao.individuos)
-
-        # Realizar recombinação
-        populacao.recombinar()
-        # exibir_individuos("Indivíduos após recombinação:", populacao.individuos)
-
-        # Aplicar mutação
+    
+        populacao.recombinar(recombinador=troca_extremidades_strategy)
+    
         populacao.mutar_populacao(dmax=__DMAX__, prob_mutacao=__PROB_MUTACAO__)
-        # exibir_individuos("Indivíduos após mutação:", populacao.individuos)
 
         populacao.substituir_populacao(porcentagem_elite=__PORCENTAGEM_ELITE__)
 
-        # Salvar o melhor indivíduo no arquivo saida.out
+        # Salvar o melhor indivíduo global no arquivo saida.out
         with open("saida.out", "a") as f:
             f.write("-" * 60 + "\n")
-            f.write("Melhor indivíduo da população:\n")
-            if populacao.melhor_global is not None:
-                f.write(str(populacao.melhor_global.tolist()) + "\n")
+            f.write("Melhor indivíduo da global:\n")
+            f.write(str(populacao.melhor_global.tolist()) + "\n")
             f.write("-" * 60 + "\n")
 
         i += 1
