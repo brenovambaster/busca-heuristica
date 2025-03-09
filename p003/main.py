@@ -3,6 +3,7 @@ from Populacao import Populacao
 from processamento import preprocess_data
 from TrocaExtremidadesStrategy import TrocaExtremidadesStrategy
 from MediaStrategy import MediaStrategy
+import matplotlib.pyplot as plt
 
 
 
@@ -17,9 +18,9 @@ def main():
     - Identifica o melhor indivíduo.
     """ 
 
-    __TOTAL_GERACAO__ :int = 200
+    __TOTAL_GERACAO__ :int = 500
     __PROB_MUTACAO__ :float = 0.05
-    __PORCENTAGEM_ELITE__ :float = 0.25
+    __PORCENTAGEM_ELITE__ :float = 0.23
     __DMAX__ :float = 1.0
     __TAMANHO_POPULACAO__ :int = 20
 
@@ -36,13 +37,16 @@ def main():
     troca_extremidades_strategy = TrocaExtremidadesStrategy(data=reduced_data)
     media_strategy = MediaStrategy(data=reduced_data)
 
+    historico = []
+
     i =0
     while i < __TOTAL_GERACAO__:
 
 
         populacao.selecionar_individuos()
-    
-        populacao.recombinar(recombinador=troca_extremidades_strategy)
+        historico.append(populacao.melhor_global.fitness)
+
+        populacao.recombinar(recombinador=media_strategy)
     
         populacao.mutar_populacao(dmax=__DMAX__, prob_mutacao=__PROB_MUTACAO__)
 
@@ -57,7 +61,19 @@ def main():
 
         i += 1
     
-
+    # gerar o gráfico de convergência do melhor indivíduo por geração
+    plt.figure(figsize=(10, 6))
+    plt.plot(historico, 'b-', label="Fitness do Melhor Indivíduo")
+    plt.axhline(y=93.7869, color='r', linestyle='--', label="Saída do KMeans")
+    plt.axhline(y=92.2274, color='g', linestyle='--', label="Saída da Busca Local")
+    
+    plt.title("Convergência do melhor indivíduo por geração. Gerações: " + str(__TOTAL_GERACAO__))
+    plt.xlabel("Geração")
+    plt.ylabel("Fitness")
+    plt.legend()
+    plt.grid(True)
+    plt.savefig(f"convergencia{__TOTAL_GERACAO__}.png")
+    plt.show()
 
 def load_data(file_path: str) -> pd.DataFrame:
     """
