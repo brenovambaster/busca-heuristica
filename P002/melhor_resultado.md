@@ -1,0 +1,176 @@
+# Melhor solução do Programa já encontrada até então: 
+
+```shell
+
+Centroides encontrados pelo K-Means: [[ 0.23242425  0.16964401]
+ [-1.00234577 -0.99855091]
+ [ 1.11694924  1.17118187]]
+Custo  total do K-Means: 93.35342525387837
+----------------------------------------------------------
+Primeiros centr�ides encontrados: [[ 0.43242425  0.26964401]
+ [-1.00234577 -0.99855091]
+ [ 1.11694924  1.17118187]]
+Custo total da busca local primeira melhora: 93.2647516514894
+----------------------------------------------------------
+Melhores centr�ides encontrados: [[ 0.23242425  0.16964401]
+ [-1.00234577 -0.99855091]
+ [ 1.01694924  1.07118187]]
+Custo total da busca local melhor melhora: 92.74371436432418
+----------------------------------------------------------
+Itera��o 1: Custo 92.74371436432418
+Itera��o 2: Custo 92.39101973947648
+Itera��o 3: Custo 92.45105851936727
+Itera��o 4: Custo 92.39884176817738
+Itera��o 5: Custo 92.46034285168629
+Itera��o 6: Custo 92.45978131710984
+Itera��o 7: Custo 92.46754231449336
+Itera��o 8: Custo 92.72513910309227
+Itera��o 9: Custo 92.69947237009191
+Itera��o 10: Custo 92.76573887260028
+Itera��o 11: Custo 92.62718101838986
+Itera��o 12: Custo 92.60403646219089
+Itera��o 13: Custo 92.33080378346381
+Itera��o 14: Custo 92.22739844004067
+Itera��o 15: Custo 92.36611353504297
+Itera��o 16: Custo 92.3675815968524
+Itera��o 17: Custo 92.41259093865703
+Itera��o 18: Custo 92.51492789840214
+Itera��o 19: Custo 92.68231177156025
+Itera��o 20: Custo 92.33080378346381
+Itera��o 21: Custo 92.22739844004067
+Itera��o 22: Custo 92.36611353504297
+Itera��o 23: Custo 92.3675815968524
+Itera��o 24: Custo 92.41259093865703
+Itera��o 25: Custo 92.51492789840214
+Itera��o 26: Custo 92.68231177156025
+Itera��o 27: Custo 92.33080378346381
+Itera��o 28: Custo 92.22739844004067
+Itera��o 29: Custo 92.36611353504297
+Itera��o 30: Custo 92.3675815968524
+Itera��o 31: Custo 92.41259093865703
+Itera��o 32: Custo 92.51492789840214
+Itera��o 33: Custo 92.68231177156025
+Itera��o 34: Custo 92.33080378346381
+Itera��o 35: Custo 92.22739844004067
+Itera��o 36: Custo 92.36611353504297
+Itera��o 37: Custo 92.3675815968524
+Itera��o 38: Custo 92.41259093865703
+Itera��o 39: Custo 92.51492789840214
+Itera��o 40: Custo 92.68231177156025
+Itera��o 41: Custo 92.33080378346381
+Itera��o 42: Custo 92.22739844004067
+Itera��o 43: Custo 92.36611353504297
+Itera��o 44: Custo 92.3675815968524
+Itera��o 45: Custo 92.41259093865703
+Itera��o 46: Custo 92.51492789840214
+Itera��o 47: Custo 92.68231177156025
+Itera��o 48: Custo 92.33080378346381
+Itera��o 49: Custo 92.22739844004067
+Itera��o 50: Custo 92.36611353504297
+Itera��o 51: Custo 92.3675815968524
+Itera��o 52: Custo 92.41259093865703
+Itera��o 53: Custo 92.51492789840214
+Itera��o 54: Custo 92.68231177156025
+Itera��o 55: Custo 92.33080378346381
+Itera��o 56: Custo 92.22739844004067
+Itera��o 57: Custo 92.36611353504297
+Itera��o 58: Custo 92.3675815968524
+Itera��o 59: Custo 92.41259093865703
+Itera��o 60: Custo 92.51492789840214
+Itera��o 61: Custo 92.68231177156025
+Itera��o 62: Custo 92.33080378346381
+Itera��o 63: Custo 92.22739844004067
+Itera��o 64: Custo 92.36611353504297
+Itera��o 65: Custo 92.3675815968524
+Itera��o 66: Custo 92.41259093865703
+Itera��o 67: Custo 92.51492789840214
+Itera��o 68: Custo 92.68231177156025
+Itera��o 69: Custo 92.33080378346381
+Itera��o 70: Custo 92.22739844004067
+Itera��o 71: Custo 92.36611353504297
+Itera��o 72: Custo 92.3675815968524
+Itera��o 73: Custo 92.41259093865703
+Itera��o 74: Custo 92.51492789840214
+Itera��o 75: Custo 92.68231177156025
+Itera��o 76: Custo 92.33080378346381
+Itera��o 77: Custo 92.22739844004067
+Itera��o 78: Custo 92.36611353504297
+Itera��o 79: Custo 92.3675815968524
+Itera��o 80: Custo 92.41259093865703
+Itera��o 81: Custo 92.51492789840214
+Itera��o 82: Custo 92.68231177156025
+Itera��o 83: Custo 92.33080378346381
+Itera��o 84: Custo 92.22739844004067
+Itera��o 85: Custo 92.36611353504297
+Itera��o 86: Custo 92.3675815968524
+Itera��o 87: Custo 92.41259093865703
+Itera��o 88: Custo 92.51492789840214
+Itera��o 89: Custo 92.68231177156025
+Itera��o 90: Custo 92.33080378346381
+Itera��o 91: Custo 92.22739844004067
+Itera��o 92: Custo 92.36611353504297
+Itera��o 93: Custo 92.3675815968524
+Itera��o 94: Custo 92.41259093865703
+Itera��o 95: Custo 92.51492789840214
+Itera��o 96: Custo 92.68231177156025
+Itera��o 97: Custo 92.33080378346381
+Itera��o 98: Custo 92.22739844004067
+Itera��o 99: Custo 92.36611353504297
+Itera��o 100: Custo 92.3675815968524
+Itera��o 101: Custo 92.41259093865703
+Itera��o 102: Custo 92.51492789840214
+Itera��o 103: Custo 92.68231177156025
+Itera��o 104: Custo 92.33080378346381
+Itera��o 105: Custo 92.22739844004067
+Itera��o 106: Custo 92.36611353504297
+Itera��o 107: Custo 92.3675815968524
+Itera��o 108: Custo 92.41259093865703
+Itera��o 109: Custo 92.51492789840214
+Itera��o 110: Custo 92.68231177156025
+Itera��o 111: Custo 92.33080378346381
+Itera��o 112: Custo 92.22739844004067
+Itera��o 113: Custo 92.36611353504297
+Itera��o 114: Custo 92.3675815968524
+Itera��o 115: Custo 92.41259093865703
+Itera��o 116: Custo 92.51492789840214
+Itera��o 117: Custo 92.68231177156025
+Itera��o 118: Custo 92.33080378346381
+Itera��o 119: Custo 92.22739844004067
+Itera��o 120: Custo 92.36611353504297
+Itera��o 121: Custo 92.3675815968524
+Itera��o 122: Custo 92.41259093865703
+Itera��o 123: Custo 92.51492789840214
+Itera��o 124: Custo 92.68231177156025
+Itera��o 125: Custo 92.33080378346381
+Itera��o 126: Custo 92.22739844004067
+Itera��o 127: Custo 92.36611353504297
+Itera��o 128: Custo 92.3675815968524
+Itera��o 129: Custo 92.41259093865703
+Itera��o 130: Custo 92.51492789840214
+Itera��o 131: Custo 92.68231177156025
+Itera��o 132: Custo 92.33080378346381
+Itera��o 133: Custo 92.22739844004067
+Itera��o 134: Custo 92.36611353504297
+Itera��o 135: Custo 92.3675815968524
+Itera��o 136: Custo 92.41259093865703
+Itera��o 137: Custo 92.51492789840214
+Itera��o 138: Custo 92.68231177156025
+Itera��o 139: Custo 92.33080378346381
+Itera��o 140: Custo 92.22739844004067
+Itera��o 141: Custo 92.36611353504297
+Itera��o 142: Custo 92.3675815968524
+Itera��o 143: Custo 92.41259093865703
+Itera��o 144: Custo 92.51492789840214
+Itera��o 145: Custo 92.68231177156025
+Itera��o 146: Custo 92.33080378346381
+Itera��o 147: Custo 92.22739844004067
+Itera��o 148: Custo 92.36611353504297
+Itera��o 149: Custo 92.3675815968524
+Itera��o 150: Custo 92.41259093865703
+Melhores centr�ides pela busca tabu: [[ 0.13242425 -0.03035599]
+ [-1.20234577 -1.09855091]
+ [ 1.01694924  0.97118187]]
+Custo final da busca tabu: 92.22739844004067
+----------------------------------------------------------
+											
+```
