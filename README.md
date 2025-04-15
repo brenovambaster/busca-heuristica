@@ -53,7 +53,7 @@ Os algoritmos genéticos aprimoraram a solução inicial do K-Means (custo de 93
 
 #### Acesso aos Detalhes
 - Diretório: [P003](./P003)
-- Documentação: [README](./P003/README.md)
+- Documentação: [README](./p003/README.md)
 
 ## Análise Comparativa
 

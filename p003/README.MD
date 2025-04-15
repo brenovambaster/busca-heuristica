@@ -1,29 +1,29 @@
 - [📌 Descrição do Projeto](#-descrição-do-projeto)
-  - [Documentos](#documentos)
-  - [🧪 Técnicas Implementadas](#-técnicas-implementadas)
-    - [Algoritmos Genéticos](#algoritmos-genéticos)
-  - [📊 Abordagem Proposta](#-abordagem-proposta)
-  - [📈 Resultados e Discussão](#-resultados-e-discussão)
-    - [Comparação com Outras Abordagens](#comparação-com-outras-abordagens)
-  - [Conclusão](#conclusão)
-  - [👥 Autores](#-autores)
-  - [Requisitos](#requisitos)
-  - [Como Executar o Projeto](#como-executar-o-projeto)
-  - [Solução de Problemas](#solução-de-problemas)
+- [Documentos](#documentos)
+- [Algoritmos Genéticos](#algoritmos-genéticos)
+- [📊 Abordagem Proposta](#-abordagem-proposta)
+- [📈 Resultados e Discussão](#-resultados-e-discussão)
+  - [Comparação com Outras Abordagens](#comparação-com-outras-abordagens)
+- [Conclusão](#conclusão)
+- [👥 Autores](#-autores)
+- [Requisitos](#requisitos)
+- [Como Executar o Projeto](#como-executar-o-projeto)
+- [Solução de Problemas](#solução-de-problemas)
 
 
-# 📌 Descrição do Projeto
+## 📌 Descrição do Projeto
 
 Este projeto foi desenvolvido para a disciplina de Técnicas de Busca Heurística do curso de Ciência da Computação do IFNMG - Instituto Federal do Norte de Minas Gerais. Ele explora a aplicação de algoritmos genéticos para otimizar o problema de agrupamento baseado em centróides, utilizando a base de dados Wine reduzida a duas dimensões (R²) com os atributos Flavonoides e Fenóis Totais. O objetivo principal é minimizar o somatório das distâncias euclidianas dos registros aos seus respectivos centróides, definindo um conjunto otimizado de três centróides.
 
 A base de dados Wine, disponibilizada pelo UCI Machine Learning Repository, contém informações sobre características químicas de vinhos de três variedades cultivadas na região da Lombardia, Itália. Neste estudo, a dimensionalidade foi reduzida para facilitar a análise, mantendo apenas os atributos Flavonoides e Fenóis Totais.
 
 ## Documentos
+
 * Relatório técnico : [relatorio.pdf](Relatório%20P003.pdf)
 * Apresentação: [apresentacao.pdf](ApresentacaoAG.pdf)
-## 🧪 Técnicas Implementadas
 
-### Algoritmos Genéticos
+
+## Algoritmos Genéticos
 
 Os algoritmos genéticos (AGs) são métodos de otimização inspirados na evolução biológica e na seleção natural de Darwin. Eles operam sobre uma população de soluções candidatas (representadas como "cromossomos"), refinando-as ao longo de gerações por meio de processos como cruzamento, mutação e seleção. Os principais componentes utilizados neste projeto incluem:
 

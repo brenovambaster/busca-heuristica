@@ -1,18 +1,18 @@
 - [📌 Descrição do Projeto](#-descrição-do-projeto)
 - [Documentos](#documentos)
-  - [🧪 Técnicas Implementadas](#-técnicas-implementadas)
-    - [🔍 Busca Local](#-busca-local)
-    - [🔍 Busca Tabu](#-busca-tabu)
-  - [📊 Vizinhanças](#-vizinhanças)
-  - [Fatores que Influenciam o Desempenho](#fatores-que-influenciam-o-desempenho)
-  - [Cenários Possíveis](#cenários-possíveis)
-  - [Exemplo Numérico/Experimental](#exemplo-numéricoexperimental)
-  - [📈 Exemplos de Resultados](#-exemplos-de-resultados)
-  - [Conclusão](#conclusão)
-  - [👥 Autores](#-autores)
-  - [Resultados Obtidos](#resultados-obtidos)
+- [🧪 Técnicas Implementadas](#-técnicas-implementadas)
+  - [🔍 Busca Local](#-busca-local)
+  - [🔍 Busca Tabu](#-busca-tabu)
+- [📊 Vizinhanças](#-vizinhanças)
+- [Fatores que Influenciam o Desempenho](#fatores-que-influenciam-o-desempenho)
+- [Cenários Possíveis](#cenários-possíveis)
+- [Exemplo Numérico/Experimental](#exemplo-numéricoexperimental)
+- [📈 Exemplos de Resultados](#-exemplos-de-resultados)
+- [Conclusão](#conclusão)
+- [👥 Autores](#-autores)
+- [Resultados Obtidos](#resultados-obtidos)
 
-# 📌 Descrição do Projeto
+## 📌 Descrição do Projeto
 
 Este projeto foi desenvolvido para a disciplina de Técnicas de Busca Heurística do curso de Ciência da Computação do IFNMG. Ele explora o uso de técnicas de busca local (primeira melhora e melhor melhora) e busca tabu para otimizar o problema de agrupamento baseado em centróides, inicialmente resolvido pelo algoritmo K-Means.
 
@@ -20,7 +20,7 @@ A base de dados Wine foi utilizada, reduzida a duas dimensões (R²) com os atri
 
 Para instruções detalhadas sobre a execução do projeto, consulte [Como Executar](ComoExecutar.md).
 
-# Documentos
+## Documentos
 
 * Relatório técnico [relatorio.pdf](Relatório%20P002.pdf)
 * Apresentação: [apresentacao.pdf](Apresentação%20P002.pdf) 
