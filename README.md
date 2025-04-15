@@ -1,3 +1,19 @@
+- [Repositório de Técnicas de Busca Heurística](#repositório-de-técnicas-de-busca-heurística)
+  - [Estrutura do Repositório](#estrutura-do-repositório)
+  - [Descrição dos Projetos](#descrição-dos-projetos)
+    - [Projeto P002](#projeto-p002)
+      - [Metodologia](#metodologia)
+      - [Resultados](#resultados)
+      - [Acesso aos Detalhes](#acesso-aos-detalhes)
+    - [Projeto P003](#projeto-p003)
+      - [Metodologia](#metodologia-1)
+      - [Resultados](#resultados-1)
+      - [Acesso aos Detalhes](#acesso-aos-detalhes-1)
+  - [Análise Comparativa](#análise-comparativa)
+- [Requisitos](#requisitos)
+- [Autores](#autores)
+- [Observações](#observações)
+
 # Repositório de Técnicas de Busca Heurística
 
 Este repositório reúne os projetos desenvolvidos no âmbito da disciplina **Técnicas de Busca Heurística**, integrante do curso de Ciência da Computação do **Instituto Federal do Norte de Minas Gerais (IFNMG)**. Os projetos, denominados **P002** e **P003**, abordam a otimização de um problema de agrupamento baseado em centróides, utilizando a base de dados **Wine**, reduzida a duas dimensões (ℝ²) com os atributos **Flavonoides** e **Fenóis Totais**. O objetivo central é minimizar a soma das distâncias euclidianas dos registros aos seus respectivos centróides, refinando soluções iniciais obtidas pelo algoritmo **K-Means** por meio de abordagens heurísticas distintas.
