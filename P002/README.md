@@ -1,4 +1,5 @@
 - [📌 Descrição do Projeto](#-descrição-do-projeto)
+- [Como executar](como-executar)
 - [Documentos](#documentos)
 - [🧪 Técnicas Implementadas](#-técnicas-implementadas)
   - [🔍 Busca Local](#-busca-local)
@@ -18,7 +19,9 @@ Este projeto foi desenvolvido para a disciplina de Técnicas de Busca Heurístic
 
 A base de dados Wine foi utilizada, reduzida a duas dimensões (R²) com os atributos Flavonoides e Fenóis Totais. O objetivo é minimizar o somatório das distâncias euclidianas dos registros aos seus respectivos centróides, empregando técnicas de vizinhança para explorar diferentes configurações de centróides e aprimorar as soluções do K-Means.
 
-Para instruções detalhadas sobre a execução do projeto, consulte [Como Executar](ComoExecutar.md).
+## Como executar
+
+Consulte: [Como Executar](ComoExecutar.md).
 
 ## Documentos
 
