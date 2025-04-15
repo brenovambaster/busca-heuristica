@@ -75,8 +75,9 @@ A busca tabu (P002) destacou-se como a abordagem mais eficaz, devido à sua capa
 Os projetos requerem a instalação do Python e das dependências listadas nos arquivos requirements.txt de cada diretório. Recomenda-se o uso de ambientes virtuais para isolar as dependências.
 
 # Autores
-Artur Pereira Neto
-Breno Vambáster Cardoso Lima
+
+- Artur Pereira Neto
+- Breno Vambáster Cardoso Lima
 
 # Observações
 Verifique se o Python e o pip estão devidamente instalados antes de executar os projetos.
