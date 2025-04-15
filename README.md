@@ -7,7 +7,7 @@ Este repositório reúne os projetos desenvolvidos no âmbito da disciplina **T�
 O repositório está organizado em dois subdiretórios, correspondentes aos projetos desenvolvidos:
 
 - **[P002](./P002)**: Dedica-se à aplicação de técnicas de busca local e busca tabu.
-- **[P003](./P003)**: Concentra-se na utilização de algoritmos genéticos.
+- **[P003](./p003)**: Concentra-se na utilização de algoritmos genéticos.
 
 Detalhes sobre a implementação e execução de cada projeto podem ser encontrados nos respectivos arquivos `README.md` e, no caso do P002, no documento complementar `ComoExecutar.md`.
 
