@@ -20,7 +20,7 @@ A base de dados Wine foi utilizada, reduzida a duas dimensões (R²) com os atri
 
 Para instruções detalhadas sobre a execução do projeto, consulte [Como Executar](ComoExecutar.md).
 
-# Documentos
+## Documentos
 
 * Relatório técnico [relatorio.pdf](Relatório%20P002.pdf)
 * Apresentação: [apresentacao.pdf](Apresentação%20P002.pdf) 
@@ -40,7 +40,7 @@ A busca local avalia os vizinhos dos centróides para identificar configuraçõe
 
 A busca tabu aprimora a busca local ao incorporar uma lista tabu, uma memória que evita revisitar soluções recentes. Isso amplia a exploração do espaço de busca e facilita a superação de mínimos locais. Um critério de aspiração foi implementado, permitindo aceitar uma solução tabu se ela superar a melhor solução conhecida, aumentando as chances de alcançar o ótimo global.
 
-## 📊 Vizinhanças
+### 📊 Vizinhanças
 
 Duas estruturas de vizinhança foram definidas:
 
